@@ -1,0 +1,17 @@
+ TP Morpion
+ 
+TP7:	hors reseau
+	- gestion plateau (drawing pour plateau)
+	- regles metier
+	- MVC
+	
+TP8:	TP7 +
+	- reseau
+
+TP9:	TP8	+
+	- nom utilisateur
+	- historique
+TP10:	TP9	+
+	-nb de cases dynamique (ex: 7*4, 4 alignes pour gagner)
+	
+	
