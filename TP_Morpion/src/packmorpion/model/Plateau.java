@@ -6,10 +6,11 @@ public class Plateau {
 	private int colonne;
 	private int nbre_aligne;
 	
-	public Plateau(int ligne,int colonne) {
+	public Plateau(int ligne,int colonne,int nbr_aligne) {
 		
-		this.setLigne(ligne);
-		this.setColonne(colonne);
+		this.ligne = ligne;
+		this.colonne = colonne;
+		this.nbre_aligne = nbr_aligne;
 		
 	}
 
