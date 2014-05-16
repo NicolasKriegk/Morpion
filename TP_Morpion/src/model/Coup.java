@@ -3,24 +3,23 @@ package model;
 public class Coup {
 	
 	private Joueur joueur;
-	private int coord1;
-	private int coord2;
+	private int coordx;
+	private int coordy;
 	
-	public Coup() {
-		
+	public Coup() {		
 	}
 	
-	public int getCoord2() {
-		return coord2;
+	public int getCoordy() {
+		return coordy;
 	}
-	public void setCoord2(int coord2) {
-		this.coord2 = coord2;
+	public void setCoordy(int coord2) {
+		this.coordy = coord2;
 	}
-	public int getCoord1() {
-		return coord1;
+	public int getCoordx() {
+		return coordx;
 	}
-	public void setCoord1(int coord1) {
-		this.coord1 = coord1;
+	public void setCoordx(int coord1) {
+		this.coordx = coord1;
 	}
 	public Joueur getJoueur() {
 		return joueur;
@@ -28,7 +27,5 @@ public class Coup {
 	public void setJoueur(Joueur joueur) {
 		this.joueur = joueur;
 	}
-	
-	
-
+		
 }

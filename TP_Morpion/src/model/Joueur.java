@@ -2,12 +2,11 @@ package model;
 
 public class Joueur {
 	
+	// symbole du joueur X ou O
 	private String symbole;
 	
-	public Joueur(String symb) {
-		
-		this.setSymbole(symb);
-		
+	public Joueur(String symb) {	
+		this.setSymbole(symb);		
 	}
 
 	public String getSymbole() {
