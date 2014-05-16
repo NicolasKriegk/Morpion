@@ -1,7 +1,7 @@
 package packmorpion;
 
-import packmorpion.model.Model;
-import packmorpion.view.GameBoard;
+import packmorpion.model.ModelMorp;
+import packmorpion.view.MainBoard;
 
 public class MorpionMain {
 
@@ -9,8 +9,8 @@ public class MorpionMain {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-        Model m = new Model();
-        GameBoard v = new GameBoard(m);
+        ModelMorp m = new ModelMorp();
+        MainBoard v = new MainBoard(m);
 //        Controller c = new Controller(m, v);
 //        m.addObserver(v);
 //        v.addObserver(c);
