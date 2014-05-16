@@ -2,7 +2,6 @@ package packmorpion.view;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.Observable;
@@ -13,10 +12,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import packmorpion.model.Model;
+import packmorpion.model.ModelMorp;
 
 public class MainBoard extends Observable implements Observer {
-	private Model m;
+	private ModelMorp m;
 	// private JLabel secondLabel;
 	// private JLabel minuteLabel;
 	// private JLabel hourLabel;
@@ -30,7 +29,7 @@ public class MainBoard extends Observable implements Observer {
 	// historique
 	private JPanel histo;
 
-	public MainBoard(Model m) {
+	public MainBoard(ModelMorp m) {
 		this.m = m;
 		createGUI();
 	}
@@ -89,7 +88,7 @@ public class MainBoard extends Observable implements Observer {
 //				board = new JPanel();
 //				board.setBackground(Color.BLUE);
 				// creation du plateau
-				board = new GameBoard(4, 4, 300, 300);
+				board = new GameBoard(4, 4, 200, 200);
 //				board.add(boardPicture);
 				// boardPicture.repaint();
 				jFrame.add(board, constraints);
