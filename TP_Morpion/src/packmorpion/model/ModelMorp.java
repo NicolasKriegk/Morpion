@@ -63,7 +63,7 @@ public class ModelMorp extends Observable {
 		// on initialise la liste du joueur courrant
 		List<Coup> liste_coupsJoueur = coup_joueur(coups, newcoup);
 
-		// initialisation coup courrant dir1 : horiz +1
+		// Dir1 initialisation coup courrant : horiz +1
 		coup_cur.setCoordy(newcoup.getCoordy()); // meme ligne,y fixe
 		coup_cur.setCoordx(newcoup.getCoordx() + 1);
 		// coup courrant existe dans la liste des coups du joueur ?
@@ -76,7 +76,7 @@ public class ModelMorp extends Observable {
 			}
 		}
 
-		// dir1 : horiz -1
+		// Dir1 : horiz -1
 		// si pas trouvé 3 a la suite, dans l'autre sens
 		if (alasuitedir < 3) {
 			coup_cur.setCoordx(newcoup.getCoordx() - 1);
@@ -92,31 +92,50 @@ public class ModelMorp extends Observable {
 			}
 		}
 
-		// // dir2 : diag1 - SO - NE
-		// initialisation coup courrant dir1 : horiz +1
-		coup_cur.setCoordy(newcoup.getCoordy() + 1); // N
-		coup_cur.setCoordx(newcoup.getCoordx() + 1); // E
-		if (coup_exist(liste_coupsJoueur, coup_cur)) {
-			alasuitedir = alasuitedir + 1;
-			// dir1 : horiz +2
-			coup_cur.setCoordy(newcoup.getCoordy() + 2); // N
-			coup_cur.setCoordx(newcoup.getCoordx() + 2); // E
+		// Dir2 : diag1 - SO - NE
+		if (alasuitedir < 3) {
+			alasuitedir = 1;
+			coup_cur.setCoordy(newcoup.getCoordy() + 1); // N
+			coup_cur.setCoordx(newcoup.getCoordx() + 1); // E
 			if (coup_exist(liste_coupsJoueur, coup_cur)) {
 				alasuitedir = alasuitedir + 1;
+				// dir1 : horiz +2
+				coup_cur.setCoordy(newcoup.getCoordy() + 2); // N
+				coup_cur.setCoordx(newcoup.getCoordx() + 2); // E
+				if (coup_exist(liste_coupsJoueur, coup_cur)) {
+					alasuitedir = alasuitedir + 1;
+				}
 			}
 		}
 
-		// si pas trouvé 3 a la suite, dans l'autre sens
+		// Dir2 : diag1 - SO - NE autre sens
 		if (alasuitedir < 3) {
-			alasuitedir = 1;
-			coup_cur.setCoordy(newcoup.getCoordy() -1 ); // S
-			coup_cur.setCoordx(newcoup.getCoordx() -1 ); // O
+			coup_cur.setCoordy(newcoup.getCoordy() - 1); // S
+			coup_cur.setCoordx(newcoup.getCoordx() - 1); // O
 			if (coup_exist(liste_coupsJoueur, coup_cur)) {
 				alasuitedir = alasuitedir + 1;
 				// dir1 : horiz -2
 				if (alasuitedir < 3) {
-					coup_cur.setCoordy(newcoup.getCoordy() -2 ); // S
-					coup_cur.setCoordx(newcoup.getCoordx() -2 ); // O
+					coup_cur.setCoordy(newcoup.getCoordy() - 2); // S
+					coup_cur.setCoordx(newcoup.getCoordx() - 2); // O
+					if (coup_exist(liste_coupsJoueur, coup_cur)) {
+						alasuitedir = alasuitedir + 1;
+					}
+				}
+			}
+		}
+
+		// Dir3 : diag2 - NO - SE
+		if (alasuitedir < 3) {
+			alasuitedir = 1;
+			coup_cur.setCoordy(newcoup.getCoordy() + 1); // N
+			coup_cur.setCoordx(newcoup.getCoordx() - 1); // O
+			if (coup_exist(liste_coupsJoueur, coup_cur)) {
+				alasuitedir = alasuitedir + 1;
+				// dir1 : horiz -2
+				if (alasuitedir < 3) {
+					coup_cur.setCoordy(newcoup.getCoordy() + 2); // N
+					coup_cur.setCoordx(newcoup.getCoordx() - 2); // O
 					if (coup_exist(liste_coupsJoueur, coup_cur)) {
 						alasuitedir = alasuitedir + 1;
 					}
@@ -124,39 +143,57 @@ public class ModelMorp extends Observable {
 			}
 		}
 		
-		// // dir3 : diag2 - NO - SE
+		// Dir3 : diag2 - NO - SE autre sens
 		if (alasuitedir < 3) {
-			alasuitedir = 1;
-			coup_cur.setCoordy(newcoup.getCoordy() + 1 ); // N
-			coup_cur.setCoordx(newcoup.getCoordx() - 1 ); // O
+			coup_cur.setCoordy(newcoup.getCoordy() - 1); // S
+			coup_cur.setCoordx(newcoup.getCoordx() + 1); // E
 			if (coup_exist(liste_coupsJoueur, coup_cur)) {
 				alasuitedir = alasuitedir + 1;
 				// dir1 : horiz -2
 				if (alasuitedir < 3) {
-					coup_cur.setCoordy(newcoup.getCoordy() + 2 ); // N
-					coup_cur.setCoordx(newcoup.getCoordx() - 2 ); // O
+					coup_cur.setCoordy(newcoup.getCoordy() - 2); // S
+					coup_cur.setCoordx(newcoup.getCoordx() + 2); // E
 					if (coup_exist(liste_coupsJoueur, coup_cur)) {
 						alasuitedir = alasuitedir + 1;
 					}
 				}
 			}
 		}
+		
 		// // dir4 : vert
 		if (alasuitedir < 3) {
 			alasuitedir = 1;
-			coup_cur.setCoordy(newcoup.getCoordy() + 1 ); // N
+			coup_cur.setCoordy(newcoup.getCoordy() + 1); // N
 			coup_cur.setCoordx(newcoup.getCoordx());
 			if (coup_exist(liste_coupsJoueur, coup_cur)) {
 				alasuitedir = alasuitedir + 1;
 				// dir1 : horiz -2
 				if (alasuitedir < 3) {
-					coup_cur.setCoordy(newcoup.getCoordy() + 2 ); // N
+					coup_cur.setCoordy(newcoup.getCoordy() + 2); // N
 					if (coup_exist(liste_coupsJoueur, coup_cur)) {
 						alasuitedir = alasuitedir + 1;
 					}
 				}
 			}
 		}
+		
+		// // dir4 : vert autre sens
+		if (alasuitedir < 3) {
+			alasuitedir = 1;
+			coup_cur.setCoordy(newcoup.getCoordy() -1); // S
+			coup_cur.setCoordx(newcoup.getCoordx());
+			if (coup_exist(liste_coupsJoueur, coup_cur)) {
+				alasuitedir = alasuitedir + 1;
+				// dir1 : horiz -2
+				if (alasuitedir < 3) {
+					coup_cur.setCoordy(newcoup.getCoordy() - 2); // S
+					if (coup_exist(liste_coupsJoueur, coup_cur)) {
+						alasuitedir = alasuitedir + 1;
+					}
+				}
+			}
+		}
+		
 
 		return result;
 
