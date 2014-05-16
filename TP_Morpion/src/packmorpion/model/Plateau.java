@@ -2,32 +2,39 @@ package packmorpion.model;
 
 public class Plateau {
 	
-	private int dim1;
-	private int dim2;
+	private int ligne;
+	private int colonne;
+	private int nbre_aligne;
 	
-	public Plateau(int dimlong,int dimlarg) {
+	public Plateau(int ligne,int colonne) {
 		
-		this.setDim1(dimlong);
-		this.setDim2(dimlarg);
+		this.setLigne(ligne);
+		this.setColonne(colonne);
 		
 	}
 
-	public int getDim2() {
-		return dim2;
+	public int getColonne() {
+		return colonne;
 	}
 
-	public void setDim2(int dim2) {
-		this.dim2 = dim2;
+	public void setColonne(int colonne) {
+		this.colonne = colonne;
 	}
 
-	public int getDim1() {
-		return dim1;
+	public int getLigne() {
+		return ligne;
 	}
 
-	public void setDim1(int dim1) {
-		this.dim1 = dim1;
+	public void setLigne(int ligne) {
+		this.ligne = ligne;
 	}
-	
-	
+
+	public int getNbre_aligne() {
+		return nbre_aligne;
+	}
+
+	public void setNbre_aligne(int nbre_aligne) {
+		this.nbre_aligne = nbre_aligne;
+	}	
 
 }
