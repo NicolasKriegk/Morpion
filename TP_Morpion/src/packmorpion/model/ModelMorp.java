@@ -15,6 +15,8 @@ public class ModelMorp extends Observable {
 															// symboles ???
 	private Plateau plateau = null; // attributs dimension
 	private List<Coup> coups = new ArrayList<Coup>();; // attributs joueurs
+	//private List<Coup> coupsA = new ArrayList<Coup>();
+	//private List<Coup> coupsB = new ArrayList<Coup>();
 
 	// -----------------------------------------------------------
 	// méthodes modele
@@ -59,16 +61,16 @@ public class ModelMorp extends Observable {
 			// test possible ou deja joue et ajoute
 			if (valid_coup_joue(coup_joue)) {
 				coups.add(coup_joue);
+				resultat = resultat_coup(coup_joue);
+				System.out.println("on change de joueur");
+				joueur_courrant = change_joueur(joueur_courrant);
 			} else {
 				System.out.println("Non valide, pas ajouté");
+				System.out.println("meme joueur");
 			}
 
 			essai++;
-			
-			resultat = resultat_coup(coup_joue);
 
-			joueur_courrant = change_joueur(joueur_courrant);
-			
 			aff_plateau(coups);
 		}
 		
@@ -348,7 +350,7 @@ public class ModelMorp extends Observable {
 		}
 
 		if (alasuitedir >= 3) {
-			result = "gagne";
+			result = "gagne "+coup_joue.getJoueur().getSymbole();
 		} else {
 			System.out.println("Continue");
 		}
@@ -387,7 +389,7 @@ public class ModelMorp extends Observable {
 				
 		for (int i = 0; i < plateau.getLigne() ; i++) {
 			for (int j = 0; j < plateau.getLigne() ; j++) {
-				tab[i][j] = " * ";
+				tab[i][j] = "*";
 			}
 		}
 		
