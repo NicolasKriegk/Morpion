@@ -3,16 +3,14 @@ package packmorpion.view;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JPanel;
 
 import packmorpion.model.Coup;
 import packmorpion.model.Joueur;
 import packmorpion.model.ModelMorp;
-import packmorpion.model.Plateau;
 
 public class GameBoard extends JPanel {
 	/**
@@ -27,23 +25,19 @@ public class GameBoard extends JPanel {
 	private int yDimCase;
 
 	private ModelMorp m;
-	// private Model m;
-	private Plateau plateau;
 	private Joueur premierJoueur;
 
-	// private Set<ViewCase> listeCases;
-
 	// public GameBoard(Model m, int largeur, int hauteur) {
-	public GameBoard(int lignes, int colonnes, int largeur, int hauteur) {
+	public GameBoard(ModelMorp model, int largeur, int hauteur) {
+		// le -1 vient du fait que le positionnement commence à 0 (max = taille
+		// - 1)
 		this.yMax = hauteur - 1;
 		this.xMax = largeur - 1;
-		// this.m = m;
-		this.lignes = lignes;
-		this.colonnes = colonnes;
+		 this.m = model;
+		this.lignes = m.getPlateau().getLigne();
+		this.colonnes = m.getPlateau().getColonne();
 		this.setPreferredSize(new Dimension(largeur, hauteur));
-		//ajout zone cliquable
-		addMouseListener(ml);
-		
+
 	}
 
 	@Override
@@ -73,9 +67,7 @@ public class GameBoard extends JPanel {
 			xFin = xDebut;
 			yDebut = 0;
 			yFin = yMax;
-			// System.out.println("colonne " + i);
-			// System.out.println("x1=" + xDebut + " y1=" + yDebut);
-			// System.out.println("x2=" + xFin + " y2=" + yFin);
+
 			// dessin de la colonne
 			g.drawLine(xDebut, yDebut, xFin, yFin);
 		}
@@ -87,104 +79,72 @@ public class GameBoard extends JPanel {
 			xFin = xMax;
 			yDebut = (i * yDimCase);
 			yFin = yDebut;
-			// System.out.println("ligne " + i);
-			// System.out.println("x1=" + xDebut + " y1=" + yDebut);
-			// System.out.println("x2=" + xFin + " y2=" + yFin);
+
 			// dessin de la ligne
 			g.drawLine(xDebut, yDebut, xFin, yFin);
 		}
 
 		// FIN dessin de la grille -----------------------------------------
 
-		// TODELETE test
-//		List<Coup> coups = new ArrayList<Coup>();
-//		Joueur joueur1 = new Joueur("A");
-//		Joueur joueur2 = new Joueur("B");
-//		Coup coup1 = new Coup();
-//		coup1.setJoueur(joueur1);
-//		coup1.setCoordx(1);
-//		coup1.setCoordy(2);
-//		coups.add(coup1);
-//		Coup coup2 = new Coup();
-//		coup2.setJoueur(joueur2);
-//		coup2.setCoordx(1);
-//		coup2.setCoordy(1);
-//		coups.add(coup2);
-//		Coup coup3 = new Coup();
-//		coup3.setJoueur(joueur1);
-//		coup3.setCoordx(4);
-//		coup3.setCoordy(4);
-//		coups.add(coup3);
-//		Coup coup4 = new Coup();
-//		coup4.setJoueur(joueur2);
-//		coup4.setCoordx(3);
-//		coup4.setCoordy(3);
-//		coups.add(coup4);
-
-//		System.out.println("Dim x =" + String.valueOf(xDimCase));
-//		System.out.println("Dim y =" + String.valueOf(yDimCase));
-
 		// DEBUT dessin X / O -----------------------------
 		premierJoueur = null;
-		int xHautGauche = 0;
-		int yHautGauche = 0;
-		 for (Coup coup : m.getListCoup()) {
-//		for (Coup coup : coups) {
-//			System.out.println("coup x=" + String.valueOf(coup.getCoordx()));
-//			System.out.println("coup y=" + String.valueOf(coup.getCoordy()));
-			// affectation premier joueur pour differencier symbole apres
-			if (premierJoueur == null) {
-				premierJoueur = coup.getJoueur();
+		if (m.getListeCoups().size() > 0) {
+			int xHautGauche = 0;
+			int yHautGauche = 0;
+			for (Coup coup : m.getListeCoups()) {
+//				 for (Coup coup : coups) {
+				// affectation premier joueur pour differencier symbole apres
+				if (premierJoueur == null) {
+					premierJoueur = coup.getJoueur();
+				}
+
+				// recuperation case jouee et calcul coordonnees debut dessin
+				// symbole
+				// coordonnees debut dessin: (num case sur x - 1) * (taille x) +
+				// [(taille x) / 4]
+				xHautGauche = ((coup.getCoordx() - 1) * xDimCase)
+						+ (xDimCase / 4);
+				yHautGauche = ((coup.getCoordy() - 1) * yDimCase)
+						+ (yDimCase / 4);
+				int tailleDessin = Math.min(xDimCase / 2, yDimCase / 2);
+
+				// choix X ou O
+				int symbole = coup.getJoueur() == premierJoueur ? 1 : 2;
+				switch (symbole) {
+				case 1:
+					// dessin O
+					g.drawOval(xHautGauche, yHautGauche, tailleDessin,
+							tailleDessin);
+					break;
+				case 2:
+					// dessin X diagonale HG -> BD
+					g.drawLine(xHautGauche, yHautGauche, xHautGauche
+							+ tailleDessin, yHautGauche + tailleDessin);
+
+					// dessin X diagonale BG -> HD
+					g.drawLine(xHautGauche, yHautGauche + tailleDessin,
+							xHautGauche + tailleDessin, yHautGauche);
+					break;
+				default:
+					break;
+				}
+
 			}
+			// FIN dessin X / O -----------------------------
 
-			// recuperation case jouee et calcul coordonnees debut dessin
-			// symbole
-			// coordonnees debut dessin: (num case sur x - 1) * (taille x) + [(taille x) / 4]
-			xHautGauche = ((coup.getCoordx()-1) * xDimCase) + (xDimCase / 4);
-			yHautGauche = ((coup.getCoordy()-1) * yDimCase) + (yDimCase / 4);
-			int tailleDessin = Math.min(xDimCase / 2, yDimCase / 2);
-//			System.out.println("taille =" + String.valueOf(tailleDessin));
-//			System.out.println("HG x=" + String.valueOf(xHautGauche));
-//			System.out.println("HG y=" + String.valueOf(yHautGauche));
-
-			// choix X ou O
-			int symbole = coup.getJoueur() == premierJoueur ? 1 : 2;
-			switch (symbole) {
-			case 1:
-				// dessin O
-				g.drawOval(xHautGauche, yHautGauche, tailleDessin, tailleDessin);
-				break;
-			case 2:
-				// dessin X diagonale HG -> BD
-				g.drawLine(xHautGauche, yHautGauche,
-						xHautGauche + tailleDessin, yHautGauche + tailleDessin);
-
-				// dessin X diagonale BG -> HD
-				g.drawLine(xHautGauche, yHautGauche + tailleDessin, xHautGauche
-						+ tailleDessin, yHautGauche);
-				break;
-			default:
-				break;
-			}
 
 		}
 
-		// FIN dessin X / O -----------------------------
-
 	}
 
-    private MouseListener ml = new MouseAdapter() {
-        public void mousePressed(MouseEvent e) {
-            Point p = e.getPoint();
-            
-            
-            //            String s = "not over image";
-//            if(left.contains(p))
-//                s = "left";
-//            if(right.contains(p))
-//                s = "right";
-//            System.out.println("s = " + s);
-        }
-    };
- 
+	public Coup getCoup(Point p) {
+		Coup coup = new Coup();
+		// les coordonnees du coup: coord du clic en x (ou y) divisé par nombre
+		// colonnes (ou lignes) pour connaitre coordonnees case
+		// +1 en offset pour commencer en ligne/colonne 1 et non 0
+		coup.setCoordx((p.x / xDimCase) + 1);
+		coup.setCoordy((p.y / yDimCase) + 1);
+
+		return coup;
+	}
 }

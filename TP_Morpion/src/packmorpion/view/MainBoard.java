@@ -4,6 +4,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -12,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import packmorpion.model.Coup;
 import packmorpion.model.ModelMorp;
 
 public class MainBoard extends Observable implements Observer {
@@ -85,15 +89,18 @@ public class MainBoard extends Observable implements Observer {
 				constraints.gridwidth = 7;
 				constraints.weightx = 7;
 				constraints.weighty = 4;
-//				board = new JPanel();
-//				board.setBackground(Color.BLUE);
 				// creation du plateau
-				board = new GameBoard(4, 4, 200, 200);
-//				board.add(boardPicture);
-				// boardPicture.repaint();
+				board = new GameBoard(m, 200, 200);
+				//ajout zone cliquable sur plateau
+				board.addMouseListener(new MouseAdapter() {
+			        public void mousePressed(MouseEvent e) {
+			            Point p = e.getPoint();
+			            Coup coupEnCours = board.getCoup(p);
+			            System.out.println("case (L/C) " + coupEnCours.getCoordy() + "/" + coupEnCours.getCoordx());
+			            
+			        }
+			    });
 				jFrame.add(board, constraints);
-				// jFrame.add(boardPicture, constraints);
-				// jFrame.add(boardPicture);
 
 				// historique
 				constraints.gridx = 7;
