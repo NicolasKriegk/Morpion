@@ -145,7 +145,7 @@ public class ModelMorp extends Observable {
 	public List<Coup> liste_coups_joueur(Coup coup_joue) {
 
 		List<Coup> coups_joueur = new ArrayList<Coup>();
-		// Coup cur_coup = null;
+		//Coup cur_coup = null;
 		for (Coup cur_coup : coups) {
 			// on regarde le joueur
 			if (cur_coup.getJoueur() == coup_joue.getJoueur()) {
@@ -153,6 +153,8 @@ public class ModelMorp extends Observable {
 				coups_joueur.add(cur_coup);
 			}
 		}
+		System.out.println("liste des coups du joueur créee"+coups_joueur.size());
+		//System.out.println();
 		return coups_joueur;
 	}
 
@@ -388,7 +390,7 @@ public class ModelMorp extends Observable {
 		String newLine = System.getProperty("line.separator");
 				
 		for (int i = 0; i < plateau.getLigne() ; i++) {
-			for (int j = 0; j < plateau.getLigne() ; j++) {
+			for (int j = 0; j < plateau.getColonne() ; j++) {
 				tab[i][j] = "*";
 			}
 		}
@@ -404,7 +406,7 @@ public class ModelMorp extends Observable {
 		}
 		
 		for (int i = 0; i < plateau.getLigne() ; i++) {
-			for (int j = 0; j < plateau.getLigne() ; j++) {
+			for (int j = 0; j < plateau.getColonne() ; j++) {
 				System.out.print(" "+tab[i][j]+" ");
 			}
 			System.out.println(newLine);
