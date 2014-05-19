@@ -51,7 +51,7 @@ public class ModelMorp extends Observable {
 			Coup coup_joue = new Coup();
 			coup_joue.setCoordx(nbreAlx);
 			coup_joue.setCoordy(nbreAly);
-			coup_joue.setJoueur(joueurA);
+			coup_joue.setJoueur(joueur_courrant);
 
 			// attente que le joueur clique
 			System.out.println("Joue " + nbreAlx + " / " + nbreAly);
@@ -67,8 +67,13 @@ public class ModelMorp extends Observable {
 			
 			resultat = resultat_coup(coup_joue);
 
-			change_joueur(joueur_courrant);
+			joueur_courrant = change_joueur(joueur_courrant);
+			
+			aff_plateau(coups);
 		}
+		
+		System.out.println(resultat);
+		System.out.println("reste coup :"+reste_coup_grille());
 
 	}
 
@@ -84,7 +89,8 @@ public class ModelMorp extends Observable {
 		//System.out.println("Cond 2 : coup possible grille ? " + possible);
 		// if (possible && !exist) {
 		// coups.add(coup_joue);
-		System.out.println("Coup Valide : " + coups.size());
+		System.out.println("Coup Valide "+possible+exist);
+		System.out.println("(taille ok et non joué) dc +1 : "+ coups.size());
 		// }
 
 		return (possible && !exist);
@@ -199,28 +205,33 @@ public class ModelMorp extends Observable {
 		coup_cur.setCoordy(coup_joue.getCoordy()); // meme ligne,y fixe
 		coup_cur.setCoordx(coup_joue.getCoordx() + 1);
 		// coup courrant existe dans la liste des coups du joueur ?
-		if (!coup_existe_liste_joueur(coup_cur, liste_coupsJoueur)) {
-			System.out.println("Test direction 1");
+		System.out.println("Test direction 1");
+		// coup_existe_liste_joueur vrai si existe, faux sinon
+		if (coup_existe_liste_joueur(coup_cur, liste_coupsJoueur)) {
+			System.out.println("+1 dir1 "+alasuitedir);
 			alasuitedir = alasuitedir + 1;
 			// dir1 : horiz +2
 			coup_cur.setCoordx(coup_joue.getCoordx() + 2);
 			if (coup_existe_liste_joueur(coup_cur, liste_coupsJoueur)) {
 				alasuitedir = alasuitedir + 1;
+				System.out.println("+2 dir1 "+alasuitedir);
 			}
 		}
 
 		// Dir1 : horiz -1
 		// si pas trouvé 3 a la suite, dans l'autre sens
 		if (alasuitedir < 3) {
-
+			System.out.println("autre sens "+alasuitedir);
 			coup_cur.setCoordx(coup_joue.getCoordx() - 1);
 			if (coup_existe_liste_joueur(coup_cur, liste_coupsJoueur)) {
 				alasuitedir = alasuitedir + 1;
+				System.out.println("-1 dir1 "+alasuitedir);
 				// dir1 : horiz -2
 				if (alasuitedir < 3) {
 					coup_cur.setCoordx(coup_joue.getCoordx() - 2);
 					if (coup_existe_liste_joueur(coup_cur, liste_coupsJoueur)) {
 						alasuitedir = alasuitedir + 1;
+						System.out.println("-2 dir1 "+alasuitedir);
 					}
 				}
 			}
@@ -234,11 +245,13 @@ public class ModelMorp extends Observable {
 			coup_cur.setCoordx(coup_joue.getCoordx() + 1); // E
 			if (coup_existe_liste_joueur(coup_cur, liste_coupsJoueur)) {
 				alasuitedir = alasuitedir + 1;
+				System.out.println("dir2 +1"+alasuitedir);
 				// dir1 : horiz +2
 				coup_cur.setCoordy(coup_joue.getCoordy() + 2); // N
 				coup_cur.setCoordx(coup_joue.getCoordx() + 2); // E
 				if (coup_existe_liste_joueur(coup_cur, liste_coupsJoueur)) {
 					alasuitedir = alasuitedir + 1;
+					System.out.println("dir2 +2"+alasuitedir);
 				}
 			}
 		}
@@ -247,14 +260,17 @@ public class ModelMorp extends Observable {
 		if (alasuitedir < 3) {
 			coup_cur.setCoordy(coup_joue.getCoordy() - 1); // S
 			coup_cur.setCoordx(coup_joue.getCoordx() - 1); // O
+			
 			if (coup_existe_liste_joueur(coup_cur, liste_coupsJoueur)) {
 				alasuitedir = alasuitedir + 1;
+				System.out.println("dir2 -1"+alasuitedir);
 				// dir1 : horiz -2
 				if (alasuitedir < 3) {
 					coup_cur.setCoordy(coup_joue.getCoordy() - 2); // S
 					coup_cur.setCoordx(coup_joue.getCoordx() - 2); // O
 					if (coup_existe_liste_joueur(coup_cur, liste_coupsJoueur)) {
 						alasuitedir = alasuitedir + 1;
+						System.out.println("dir2 -2"+alasuitedir);
 					}
 				}
 			}
@@ -352,15 +368,45 @@ public class ModelMorp extends Observable {
 	public Joueur change_joueur(Joueur joueur) {
 		System.out.println("changement joueur");
 		System.out.println("joueur entree:"+joueur.getSymbole());
-		if (joueur == joueurs.get(1)) {
+		if (joueur == joueurs.get(0)) {
 			System.out.println("joueur1 donc joueur2");
-			joueur = joueurs.get(2);
+			joueur = joueurs.get(1);
 		} else {
 			System.out.println("joueur2 donc joueur1");
-			joueur = joueurs.get(1);
+			joueur = joueurs.get(0);
 		}
 		System.out.println("joueur sortie:"+joueur.getSymbole());
 		return joueur;
+
+	}
+	
+	public void aff_plateau(List<Coup> coups) {
+		
+		String[][] tab = new String[plateau.getLigne()][plateau.getColonne()];
+		String newLine = System.getProperty("line.separator");
+				
+		for (int i = 0; i < plateau.getLigne() ; i++) {
+			for (int j = 0; j < plateau.getLigne() ; j++) {
+				tab[i][j] = " * ";
+			}
+		}
+		
+		for (Coup cur_coup : coups) {
+			
+			int ligne = cur_coup.getCoordx();
+			int colonne = cur_coup.getCoordy();
+			String sym = cur_coup.getJoueur().getSymbole();
+
+			tab[ligne-1][colonne-1] = sym ;
+			
+		}
+		
+		for (int i = 0; i < plateau.getLigne() ; i++) {
+			for (int j = 0; j < plateau.getLigne() ; j++) {
+				System.out.print(" "+tab[i][j]+" ");
+			}
+			System.out.println(newLine);
+		}
 
 	}
 
