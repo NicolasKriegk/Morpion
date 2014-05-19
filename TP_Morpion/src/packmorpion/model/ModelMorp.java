@@ -21,141 +21,121 @@ public class ModelMorp extends Observable {
 
 	public void partie() {
 
-		System.out.println("partie");
 		// mettre dans un init partie
 		// enregistrement joueurs
 		Joueur joueurA = new Joueur("A");
+		Joueur joueurB = new Joueur("B");
+		Joueur joueur_courrant = joueurA;
 
 		joueurs.add(joueurA);
+		joueurs.add(joueurB);
 		// setJoueur();
 		// setPlateau();
 
 		String resultat = "encours";
 
-		System.out.println("init partie");
 		setPlateau(3, 3, 3);
 		int min = 1;
 		int max = 3;
+		int essai = 1;
 
-		
-			//(resultat == "encours") && 
-			while (reste_coup_grille()) {
-				//for (int i = 1; i <= 5; i++) {
-			// tour
+		//
+		while ((resultat == "encours") && reste_coup_grille()) {
+			// for (int i = 1; i <= 9; i++) {
+			System.out.println("Tour =============================== Essai"+essai);
+			System.out.println("Joueur : "+joueur_courrant.getSymbole());
+			// Joueur joue
+			int nbreAlx = min + (int) (Math.random() * ((max - min) + 1));
+			int nbreAly = min + (int) (Math.random() * ((max - min) + 1));
+			// lecture de la config (plateau...)
+			Coup coup_joue = new Coup();
+			coup_joue.setCoordx(nbreAlx);
+			coup_joue.setCoordy(nbreAly);
+			coup_joue.setJoueur(joueurA);
 
-				// Joueur joue
-				int nbreAlx = min + (int) (Math.random() * ((max - min) + 1));
-				int nbreAly = min + (int) (Math.random() * ((max - min) + 1));
-				// lecture de la config (plateau...)
-				Coup coup_joue = new Coup();
-				coup_joue.setCoordx(nbreAlx);
-				coup_joue.setCoordx(nbreAly);
-				coup_joue.setJoueur(joueurA);
+			// attente que le joueur clique
+			System.out.println("Joue " + nbreAlx + " / " + nbreAly);
 
-				// attente que le joueur clique
-				System.out.println("x : " + nbreAlx + " - y : "+ nbreAly);
-				
-				// test possible ou deja joue et ajoute
-				add_coup_joue(coup_joue);
-				// notif
-				// resultat
-				
-				// resultat = resultat(coup_joue);
-				// notif
-				 System.out.println("Le resultat est " + resultat);
-				 System.out.println("on peut encore jouer :" + reste_coup_grille());
-				// resultat = "temp";
-				// change joueur
-				//System.out.println("=================================== fin tour :" + i);
-				}
+			// test possible ou deja joue et ajoute
+			if (valid_coup_joue(coup_joue)) {
+				coups.add(coup_joue);
+			} else {
+				System.out.println("Non valide, pas ajouté");
+			}
+
+			essai++;
 			
-		//}
+			resultat = resultat_coup(coup_joue);
+
+			change_joueur(joueur_courrant);
+		}
 
 	}
-	
-	
+
 	// procédure d'ajout d'un nouveau coup à la liste de coup
-	// teste si existe  et ajoute
+	// teste si existe et ajoute
 	// 1ere procedure
-	public List<Coup> add_coup_joue(Coup coup_joue) {
-		System.out.println("----------- add_joue_coup");
+	public Boolean valid_coup_joue(Coup coup_joue) {
+		// System.out.println("----------- add_joue_coup");
 		// le joueur qui a joué est connu par coup_joue
 		Boolean exist = coup_existe_liste(coup_joue);
-		System.out.println("Cond 1 : coup existe ds liste complete ? " + exist);
+		//System.out.println("Cond 1 : coup existe ds liste complete ? " + exist);
 		Boolean possible = coup_possible_grille(coup_joue);
-		System.out.println("Cond 2 : coup possible grille ? " + possible);
-		if (possible && !exist) {
-			//System.out.println("Coup valide et pas joué");
-			coups.add(coup_joue);
-			
-			System.out.println("Donc Ajout : "+coups.size());
-			// String res = resultat(coups,newcoup, plateau); ?? ici ou pas
-		}
-		
-		return coups;
+		//System.out.println("Cond 2 : coup possible grille ? " + possible);
+		// if (possible && !exist) {
+		// coups.add(coup_joue);
+		System.out.println("Coup Valide : " + coups.size());
+		// }
+
+		return (possible && !exist);
 	}
-	
+
 	// verification si le coup est existe : vrai si existe / faux sinon
 	// juste coordonnées
 	// ne donne pas si joué par le bon joueur
-	// liste de coup globale
 	public Boolean coup_existe_liste(Coup coup_joue) {
 		Boolean valid = false;
-		System.out.println("----------------- coup_existe_liste (cond 1)");
-		// Coup cur_coup = null;
 		for (Coup cur_coup : coups) {
-			
+
 			// on regarde la 1ere coordonnée des coups deja joués
-			System.out.println("cur_coup : "+cur_coup.getCoordx()+"/"+cur_coup.getCoordx());
-			System.out.println("coup_joue : "+coup_joue.getCoordx()+"/"+coup_joue.getCoordx());
-			if (cur_coup.getCoordx() == coup_joue.getCoordx()) {	
+			if (cur_coup.getCoordx() == coup_joue.getCoordx()) {
 				// si identique
-				// on regarde la 2eme coordonnée des coups deja joués
+				// on regarde la 2eme coordonnée
 				if (cur_coup.getCoordy() == coup_joue.getCoordy()) {
 					// si identique le coup est impossible
 					valid = true;
 					System.out
-							.println("Le coup existe dans la liste complete des coups !");
-					System.out.println("ajout sera impossible !");
+							.println("Coup existe dans liste complete !");
 				}
 			}
 		}
 		return valid;
 	}
-	
 
 	// liste de coup d'un joueur + coup joue
 	public Boolean coup_possible_grille(Coup coup_joue) {
 		Boolean valid = false;
-		System.out.println("--------coup_possible_grille (cond2)");
-		// on regarde la 1ere coordonnée des coups deja joués
+		// 1ere coordonnée des coups deja joués
 		if (coup_joue.getCoordx() <= plateau.getLigne()) {
-			System.out.println("ligne possible");
-			// si identique
-			// on regarde la 2eme coordonnée des coups deja joués
-			if (coup_joue.getCoordy() <= plateau.getColonne()) {
-				System.out.println("colonne possible");
-				// si identique le coup est impossible
+			//System.out.println("ligne possible");
+			if (coup_joue.getCoordy() <= plateau.getColonne()) {	
 				valid = true;
-				System.out.println("Le coup est possible (taille grille)");
 			}
 		}
 		return valid;
 	}
 
-
-	public void setPlateau(int ligne, int colonne, int nbr_aligne) {
-		plateau = new Plateau(ligne, colonne, nbr_aligne);
-	}
-
-	public Plateau getPlateau() {
-		return plateau;
+	public Boolean reste_coup_grille() {
+		int nbre_coup = plateau.getColonne() * plateau.getLigne();
+		Boolean reste_coup = (nbre_coup > coups.size());
+		System.out.println("Coups / Places : " + nbre_coup + " > "
+				+ coups.size());
+		return reste_coup;
 	}
 
 	// création de la liste des coups d'un joueur
 	public List<Coup> liste_coups_joueur(Coup coup_joue) {
 
-		System.out.println("----------------coups_joueur");
 		List<Coup> coups_joueur = new ArrayList<Coup>();
 		// Coup cur_coup = null;
 		for (Coup cur_coup : coups) {
@@ -163,24 +143,10 @@ public class ModelMorp extends Observable {
 			if (cur_coup.getJoueur() == coup_joue.getJoueur()) {
 				// si identique on l'insere dans la nouvelle liste
 				coups_joueur.add(cur_coup);
-				
-				//System.out.println("coup_joue : "+coup_joue.getCoordx()+"/"+coup_joue.getCoordx());
-				
-				System.out.println("Ajout le coup à la liste du joueur ");
 			}
 		}
 		return coups_joueur;
 	}
-
-	public Boolean reste_coup_grille() {
-		int nbre_coup = plateau.getColonne() * plateau.getLigne();
-		Boolean reste_coup = (nbre_coup > coups.size());
-		System.out.println("il reste des coups possible : " + nbre_coup + ">"
-				+ coups.size());
-		return reste_coup;
-	}
-
-
 
 	// liste de coup d'un joueur + coup joue
 	public Boolean coup_existe_liste_joueur(Coup coup_joue, List<Coup> coups) {
@@ -195,24 +161,29 @@ public class ModelMorp extends Observable {
 				if (cur_coup.getCoordy() == coup_joue.getCoordy()) {
 					// si identique le coup est impossible
 					valid = true;
-					System.out
-							.println("Le coup existe deja ds liste du joueur");
+					// System.out.println("Coup deja ds liste du joueur");
 				}
 			}
 		}
 		return valid;
 	}
 
-	
+	public void setPlateau(int ligne, int colonne, int nbr_aligne) {
+		plateau = new Plateau(ligne, colonne, nbr_aligne);
+	}
+
+	public Plateau getPlateau() {
+		return plateau;
+	}
+
 	public String[][] TableauRes() {
 
-		return null;// tab_res;		
+		return null;// tab_res;
 	}
-	
-	
+
 	// procédure qui renvoit le résult sous forme de String
 	// enum ??
-	public String resultat(Coup coup_joue) {
+	public String resultat_coup(Coup coup_joue) {
 		System.out.println("------------Fonction Resultat");
 		int alasuitedir = 1;
 
@@ -222,6 +193,7 @@ public class ModelMorp extends Observable {
 		Coup coup_cur = new Coup();
 		// on initialise la liste du joueur courrant
 		List<Coup> liste_coupsJoueur = liste_coups_joueur(coup_joue);
+		System.out.println("Liste coup joueur : "+liste_coupsJoueur.size());
 
 		// Dir1 initialisation coup courrant : horiz +1
 		coup_cur.setCoordy(coup_joue.getCoordy()); // meme ligne,y fixe
@@ -375,6 +347,21 @@ public class ModelMorp extends Observable {
 
 	public void setListeCoups(List<Coup> coups) {
 		this.coups = coups;
+	}
+
+	public Joueur change_joueur(Joueur joueur) {
+		System.out.println("changement joueur");
+		System.out.println("joueur entree:"+joueur.getSymbole());
+		if (joueur == joueurs.get(1)) {
+			System.out.println("joueur1 donc joueur2");
+			joueur = joueurs.get(2);
+		} else {
+			System.out.println("joueur2 donc joueur1");
+			joueur = joueurs.get(1);
+		}
+		System.out.println("joueur sortie:"+joueur.getSymbole());
+		return joueur;
+
 	}
 
 }
